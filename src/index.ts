@@ -4,6 +4,7 @@ import fastifyCookie from '@fastify/cookie';
 import { prisma } from '../lib/prisma'; // تأكد من المسار الصحيح
 import { registerHandler } from "./controller/userRegister";
 import { loginHandler } from './controller/userLogin';
+import { authenticate } from './middleware/auth';
 
 const app = Fastify({
   logger: {
@@ -20,6 +21,17 @@ app.register(fastifyCookie);
 // 2. تعريف المسارات (Routes)
 app.post("/register", registerHandler);
 app.post("/login", loginHandler);
+app.get(
+  '/profile',
+  { preHandler: authenticate },
+  async (request, reply) => {
+    const user = (request as any).user;
+    return reply.send({
+      message: 'أهلاً بك',
+      user
+    });
+  }
+);
 
 // مسار تجريبي للتأكد من أن السيرفر يعمل
 app.get("/ping", async () => {
