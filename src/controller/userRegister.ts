@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { prisma } from '../../lib/prisma';
+import { prisma } from '../lib/prisma';
 import bcrypt from 'bcrypt';
 import { generateToken } from '../jwt/auth'; // الكود اللي عملته انت
 // src/index.ts

@@ -1,0 +1,29 @@
+
+node_modules
+dist
+build
+npm-debug.log
+
+prisma/*.db
+prisma/*.db-journal
+
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# تجاهل مجلدات التحكم في الإصدار
+.git
+.gitignore
+.github
+
+# تجاهل ملفات النظام والبرامج
+.DS_Store
+.vscode/
+.idea/
+Thumbs.db

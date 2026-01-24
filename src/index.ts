@@ -1,7 +1,7 @@
 import 'dotenv/config'; 
 import Fastify from 'fastify';
 import fastifyCookie from '@fastify/cookie';
-import { prisma } from '../lib/prisma'; // تأكد من المسار الصحيح
+import { prisma } from './lib/prisma'; // تأكد من المسار الصحيح
 import { registerHandler } from "./controller/userRegister";
 import { loginHandler } from './controller/userLogin';
 import { authenticate } from './middleware/auth';
