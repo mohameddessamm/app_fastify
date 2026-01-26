@@ -1,50 +1,48 @@
-# base image
-    FROM node:22-alpine AS base
-    RUN apk add --no-cache libc6-compat openssl
-    WORKDIR /app
-    
-  
-    COPY package*.json ./
- 
-    COPY prisma ./prisma/
-    COPY prisma.config.ts ./ 
-# image development 
-    FROM base AS development
-    RUN npm install
-    COPY . .
+# 1. Base Image
+FROM node:22-alpine AS base
+RUN apk add --no-cache libc6-compat openssl
+WORKDIR /app
 
-    RUN npx prisma generate
-
+# 2. Development Image
+FROM base AS development
+COPY package*.json ./
+COPY prisma ./prisma/
+RUN npm install
+COPY . .
+# إضافة القيمة الوهمية هنا أيضاً لتجنب فشل الـ build في الـ dev mode
+RUN DATABASE_URL="postgres://unused:unused@localhost:5432/unused" npx prisma generate
 CMD npx prisma migrate deploy && npm run dev
-    
-#  image build 
-    FROM base AS build
-    RUN npm install
-    COPY . .
 
-    RUN npx prisma generate
-    RUN npm run build
+# 3. Build Image (للملفات النهائية)
+FROM base AS build
+COPY package*.json ./
+COPY prisma ./prisma/
+# نحتاج ملف الـ config هنا لأن بريزما ستبحث عنه أثناء الـ generate
+COPY prisma.config.ts ./ 
 
-    RUN npm prune --production
-    
+RUN npm install
+# التوليد باستخدام القيمة الوهمية
+RUN DATABASE_URL="postgres://unused:unused@localhost:5432/unused" npx prisma generate
 
-    FROM node:22-alpine AS production
-    RUN apk add --no-cache openssl
-    WORKDIR /app
-    
+COPY . .
+RUN npm run build
+# تنظيف المكتبات الزائدة مع الحفاظ على Prisma Client
+RUN npm prune --production
 
-    COPY --from=build /app/dist ./dist
+# 4. Production Image (الصغيرة والخفيفة)
+FROM node:22-alpine AS production
+RUN apk add --no-cache openssl
+WORKDIR /app
 
-    COPY --from=build /app/node_modules ./node_modules
+# نسخ الملفات الجاهزة فقط من مرحلة الـ build
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/package*.json ./
+COPY --from=build /app/prisma ./prisma
+COPY --from=build /app/prisma.config.ts ./
 
-    COPY --from=build /app/package*.json ./
-    COPY --from=build /app/prisma ./prisma
-    COPY --from=build /app/prisma.config.ts ./
-    
+ENV NODE_ENV=production
+EXPOSE 4000
 
-    ENV NODE_ENV=production
-    EXPOSE 4000
-    
-    RUN npx prisma generate
-    
-    CMD npx prisma migrate deploy && node dist/index.js
+# ملاحظة: لا حاجة لـ prisma generate هنا لأن الـ node_modules جاهزة
+CMD npx prisma migrate deploy && node dist/index.js
