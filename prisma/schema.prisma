@@ -24,3 +24,10 @@ model Post {
   authorId  Int
   author    User    @relation(fields: [authorId], references: [id])
 }
+// add  more models needed 
+model BlockedToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime // وقت انتهاء صلاحية التوكن الأصلية ليمسح نفسه لاحقاً
+}

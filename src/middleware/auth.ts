@@ -1,21 +1,43 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
-import {verifyToken} from "../jwt/auth"
-export const authenticate = async (request: FastifyRequest, reply: FastifyReply) => {
-  try {
-    // 1. استخراج التوكن من الكوكيز
-    const token = request.cookies.token;
 
-    if (!token) {
-      return reply.status(401).send({ error: "Unauthorized", message: "يرجى تسجيل الدخول أولاً" });
+import { FastifyRequest, FastifyReply } from 'fastify';
+import { verifyToken } from "../jwt/auth";
+import { prisma } from '../lib/prisma';
+
+export const authenticate = async (request: FastifyRequest, reply: FastifyReply) => {
+  const token = request.cookies.token;
+
+
+  if (!token) {
+    return reply.status(401).send({ 
+      error: "Unauthorized", 
+      message: "Invalid or expired session register" 
+    });
+  }
+
+  try {
+
+    const [isBlocked, decoded] = await Promise.all([
+      prisma.blockedToken.findUnique({ where: { token } }),
+      verifyToken(token)
+    ]);
+
+   
+    if (isBlocked) {
+      return reply.status(401).send({ 
+        error: 'Unauthorized', 
+        message: 'Invalid or expired session  Please log in again' 
+      });
     }
 
-    // 2. التحقق من صحة التوكن
-    const decoded = verifyToken(token);
-
-    // 3. تخزين بيانات المستخدم داخل الطلب لاستخدامها في الـ Handler
+  
     (request as any).user = decoded;
 
   } catch (error) {
-    return reply.status(401).send({ error: "Unauthorized", message: "جلسة انتهت، يرجى تسجيل الدخول مجدداً" });
+    return reply.status(401).send({ 
+      error: "Unauthorized", 
+      message: "Invalid or expired session  Please log in again" 
+    });
   }
 };
+
+
