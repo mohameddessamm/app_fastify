@@ -17,12 +17,11 @@ Dockerfile
 docker-compose.yml
 .dockerignore
 
-# تجاهل مجلدات التحكم في الإصدار
 .git
 .gitignore
 .github
 
-# تجاهل ملفات النظام والبرامج
+
 .DS_Store
 .vscode/
 .idea/

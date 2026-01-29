@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+   output   = "../generated/prisma"
 }
 
 datasource db {
@@ -9,21 +10,19 @@ datasource db {
 
 model User {
   id            Int           @id @default(autoincrement())
+  username      String        @unique
   email         String        @unique
   password      String
-  phone         String?       @unique 
-  
+  phone         String       @unique 
   // حالة الحساب
   isVerified    Boolean       @default(false) 
-  
   // بيانات الـ OTP
-  otpCode       String?       // كود التحقق المشفر أو العادي
+  otpCode       String?      // كود التحقق المشفر أو العادي
   otpExpiresAt  DateTime?     // وقت انتهاء الرمز
   otpType       OtpType?      // نوع الـ OTP (تفعيل حساب أم تغيير باسوورد)
-
   // العلاقات
   posts         Post[]
-  
+
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 }
@@ -44,6 +43,7 @@ model Post {
   author    User     @relation(fields: [authorId], references: [id])
 }
 
+// Block token from logout 
 model BlockedToken {
   id        String   @id @default(uuid())
   token     String   @unique

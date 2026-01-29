@@ -6,6 +6,7 @@ import { registerHandler } from "./controller/userRegister";
 import { loginHandler } from './controller/userLogin';
 import { authenticate } from './middleware/auth';
 import { logoutHandler } from './controller/userLogout';
+import { verifyOtpRegister } from '../service/serviceTwilio/verifyOtpController';
 
 const app = Fastify({
   logger: {
@@ -16,12 +17,16 @@ const app = Fastify({
   }
 });
 
-// 1. تسجيل الإضافات (Plugins)
+//  تسجيل  (Plugins)
 app.register(fastifyCookie);
 
-// 2. تعريف المسارات (Routes)
+//  تعريف المسارات (Routes)
 app.post("/register", registerHandler);
+
+app.post('/verify-otp', verifyOtpRegister);
+
 app.post("/login", loginHandler);
+
 app.get(
   '/profile',
   { preHandler: authenticate },

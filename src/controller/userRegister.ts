@@ -1,57 +1,78 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
-import { prisma } from '../lib/prisma';
-import bcrypt from 'bcrypt';
-import { generateToken } from '../jwt/auth'; // الكود اللي عملته انت
-// src/index.ts
-
-// باقي الاستيرادات...
+import { FastifyRequest, FastifyReply } from "fastify";
+import { prisma } from "../lib/prisma"; // تأكد من المسار الصحيح
+import bcrypt from "bcrypt";
+import crypto from "crypto";
+import twilio from "twilio";
 
 export const registerHandler = async (request: FastifyRequest, reply: FastifyReply) => {
-  const { name, email, password } = request.body as { name: string; email: string; password: string };
 
-  if (!name || !email || !password) {
-    return reply.status(400).send({ 
-      error: "Bad Request",
-      message: "يجب إرسال الاسم والبريد وكلمة المرور" 
-    });
+  const { email, password, phone, username } = request.body as {
+    email: string;
+    password: string;
+    phone: string;
+    username: string;
+  };
+
+// (Validation)
+  if (!email || !password || !phone || !username) {
+    return reply.status(400).send({ message: "please fill all fields" });
   }
 
   try {
-    const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser) {
-      return reply.status(409).send({ 
-        error: "Conflict",
-        message: "هذا البريد الإلكتروني مسجل مسبقاً" 
-      });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await prisma.user.create({
-      data: { name, email, password: hashedPassword }
+ 
+    const existingUser = await prisma.user.findFirst({
+      where: { OR: [{ email }, { phone }, { username }] },
     });
 
-    // إنشاء التوكن
-    const token = generateToken({ id: user.id, email: user.email });
+    if (existingUser) {
+      return reply.status(400).send({ message: "this user already exists" });
+    }
 
-    // إرسال التوكن في كوكي
-    reply
-      .setCookie('token', token, {
-        httpOnly: true,      // غير قابل للوصول من JS في المتصفح
-        secure: process.env.NODE_ENV === 'production', // يعمل فقط على HTTPS في البروودكشن
-        sameSite: 'strict',  // يمنع إرسال الكوكي لمواقع أخرى
-        path: '/',           // الكوكي متاح لكل صفحات الموقع
-        maxAge: 7 * 24 * 60 * 60 // 7 أيام بالثواني
-      })
-      .status(201)
-      .send({
-        message: "تم التسجيل بنجاح",
-        user: { id: user.id, name: user.name, email: user.email }
+    // OTP
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const otp = crypto.randomInt(100000, 999999).toString();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // صلاحية 10 دقائق
+
+    // 5.create user 
+    const newUser = await prisma.user.create({
+      data: {
+        email,
+        username,
+        password: hashedPassword,
+        phone,
+        isVerified: false,
+        otpCode: otp,
+        otpExpiresAt: expiresAt,
+        otpType: "ACCOUNT_VERIFICATION",
+      },
+    });
+
+    // send SMS otp via Twilio
+    const client = twilio(
+      process.env.TWILIO_ACCOUNT_SID,
+      process.env.TWILIO_AUTH_TOKEN
+    );
+const formattedPhone = phone.startsWith('01') ? `+2${phone}` : phone;
+    try {
+      await client.messages.create({
+        body: `كود التفعيل الخاص بحسابك هو: ${otp}، صالح لمدة 10 دقائق.`,
+        from: process.env.TWILIO_PHONE_NUMBER,
+        to: formattedPhone, // تأكد أن الرقم بالصيغة الدولية مثل +201xxxx
       });
+      console.log(`[SMS Sent] Successfully to ${phone}`);
+    } catch (smsError) {
+      console.error("Twilio Error:", smsError);
+      // SMS 
+    }
+
+    // 
+    return reply.status(201).send({
+      message: "تم إنشاء الحساب بنجاح. يرجى تفعيل حسابك باستخدام الكود المرسل لهاتفك.",
+      userId: newUser.id,
+    });
 
   } catch (error) {
-    console.error(error);
+    console.error("Register Error:", error);
     return reply.status(500).send({ error: "Internal Server Error" });
   }
 };
-
