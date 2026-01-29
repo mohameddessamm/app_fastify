@@ -5,6 +5,7 @@ import { prisma } from './lib/prisma'; // تأكد من المسار الصحي�
 import { registerHandler } from "./controller/userRegister";
 import { loginHandler } from './controller/userLogin';
 import { authenticate } from './middleware/auth';
+import { logoutHandler } from './controller/userLogout';
 
 const app = Fastify({
   logger: {
@@ -32,7 +33,7 @@ app.get(
     });
   }
 );
-
+app.post('/logout', logoutHandler);
 // مسار تجريبي للتأكد من أن السيرفر يعمل
 app.get("/ping", async () => {
   return { message: "pong" };

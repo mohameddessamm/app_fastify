@@ -1,33 +1,52 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+ 
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  password String
-  name     String
-  refreshToken String?
-  posts    Post[]
+  id            Int           @id @default(autoincrement())
+  email         String        @unique
+  password      String
+  phone         String?       @unique 
+  
+  // حالة الحساب
+  isVerified    Boolean       @default(false) 
+  
+  // بيانات الـ OTP
+  otpCode       String?       // كود التحقق المشفر أو العادي
+  otpExpiresAt  DateTime?     // وقت انتهاء الرمز
+  otpType       OtpType?      // نوع الـ OTP (تفعيل حساب أم تغيير باسوورد)
+
+  // العلاقات
+  posts         Post[]
+  
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+// إضافة Enum لتنظيم أنواع الـ OTP
+enum OtpType {
+  ACCOUNT_VERIFICATION
+  PASSWORD_RESET
+  TWO_FACTOR_AUTH
 }
 
 model Post {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   title     String
   content   String?
-  published Boolean @default(false)
+  published Boolean  @default(false)
   authorId  Int
-  author    User    @relation(fields: [authorId], references: [id])
+  author    User     @relation(fields: [authorId], references: [id])
 }
-// add  more models needed 
+
 model BlockedToken {
   id        String   @id @default(uuid())
   token     String   @unique
   createdAt DateTime @default(now())
-  expiresAt DateTime // وقت انتهاء صلاحية التوكن الأصلية ليمسح نفسه لاحقاً
+  expiresAt DateTime 
 }
