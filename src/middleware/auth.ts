@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { verifyToken } from "../../service/jwt/auth";
+import { verifyToken } from "../service/jwt/auth";
 import { prisma } from "../lib/prisma";
 
 export const authenticate = async (

@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { prisma } from "../lib/prisma";
 import bcrypt from "bcrypt";
-import { generateToken } from "../../service/jwt/auth";
+import { generateToken } from "../service/jwt/auth";
 
 export const loginHandler = async (
   request: FastifyRequest,
@@ -51,7 +51,7 @@ export const loginHandler = async (
       .status(200)
       .send({
         message: "تم تسجيل الدخول بنجاح",
-        user: { id: user.id, name: user.name, email: user.email },
+        user: { id: user.id,  username : user. username , email: user.email },
       });
   } catch (error) {
     console.error(error);

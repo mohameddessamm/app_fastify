@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { generateToken } from "../jwt/auth";
-import { prisma } from "../../src/lib/prisma";
-import { verify } from "node:crypto";
+import { prisma } from "../../lib/prisma";
+
 
 export const verifyOtpRegister = async (
   request: FastifyRequest,
@@ -19,18 +19,14 @@ export const verifyOtpRegister = async (
       where: { phone },
     });
 
-    if (!user) {
-      throw new Error("USER_NOT_FOUND");
-    }
-
+   if (!user || user.otpCode !== otp) {
+  return reply.status(400).send({ message: "الكود غير صحيح" });
+}
     // verify otp
-    const isOtpValid = user.otpCode === otp;
-    const isNotExpired = user.otpExpiresAt && user.otpExpiresAt > new Date();
-
-    if (!isOtpValid || !isNotExpired) {
-      throw new Error("INVALID_OR_EXPIRED_OTP");
-    }
-
+  
+if (new Date() > user.otpExpiresAt!) {
+  return reply.status(400).send({ message: "انتهت صلاحية الكود" });
+}
     // (Atomic Update)
 
     const updatedUser = await prisma.user.update({
