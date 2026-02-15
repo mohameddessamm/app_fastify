@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom'; // مهم لجلب التليفون
 import api from '../../api/axios'; // تأكد من مسار axios
 import './VerifyOtp.css';

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // 1. استيراد الهوك
 import api from '../../api/axios'; 
 import './Register.css';
-import axios, { AxiosError } from 'axios';
+import  { AxiosError } from 'axios';
 
 const Register = () => {
   const navigate = useNavigate(); // 2. تعريف الهوك داخل جسم الـ Component (مهم جداً)
