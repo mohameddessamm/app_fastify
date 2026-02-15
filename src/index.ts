@@ -6,7 +6,8 @@ import { registerHandler } from "./controller/userRegister";
 import { loginHandler } from './controller/userLogin';
 import { authenticate } from './middleware/auth';
 import { logoutHandler } from './controller/userLogout';
-import { verifyOtpRegister } from '../service/serviceTwilio/verifyOtpController';
+import { verifyOtpRegister } from './service/serviceTwilio/verifyOtpController';
+import cors from '@fastify/cors';
 
 const app = Fastify({
   logger: {
@@ -16,7 +17,11 @@ const app = Fastify({
     }
   }
 });
-
+await app.register(cors, { 
+origin: 'http://localhost:5173',
+credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+});
 //  تسجيل  (Plugins)
 app.register(fastifyCookie);
 
