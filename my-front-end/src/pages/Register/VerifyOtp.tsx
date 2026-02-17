@@ -56,7 +56,7 @@ const VerifyOtp: React.FC = () => {
       if (response.status === 200) {
         alert("تم تفعيل الحساب بنجاح! جاري توجيهك...");
         // توجيه المستخدم للصفحة الرئيسية أو لوحة التحكم
-        navigate('/home'); 
+       navigate('/profile');
       }
     } catch (error: any) {
       // معالجة الأخطاء بناءً على الرسايل اللي إنت كاتبها في الباك-إيند

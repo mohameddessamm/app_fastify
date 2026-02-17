@@ -1,7 +1,13 @@
 import jwt from 'jsonwebtoken';
-// src/index.ts
-// باقي الاستيرادات...
-// 1. دالة لجلب المفتاح السري والتحقق من وجوده في الـ .env
+
+// 1. تعريف واجهة (Interface) لشكل البيانات داخل التوكن
+// هذا سيحل مشكلة "Property role does not exist"
+interface TokenPayload {
+  id: number;
+  email: string;
+  role: string; // أضفنا الرتبة هنا لكي يفهمها TypeScript
+}
+
 const getSecret = (): string => {
   const secret = process.env.JWT_SECRET;
   if (!secret) {
@@ -10,18 +16,18 @@ const getSecret = (): string => {
   return secret;
 };
 
-// 2. دالة لإنشاء توكن جديد (Sign)
-export const generateToken = (payload: object): string => {
+// 2. تعديل الدالة لتستقبل الـ Payload بالأنواع الجديدة
+export const generateToken = (payload: TokenPayload): string => {
   const secret = getSecret();
   return jwt.sign(payload, secret, { expiresIn: '7d' });
 };
 
-// 3. دالة للتحقق من صحة التوكن (Verify)
-export const verifyToken = (token: string): any => {
+// 3. تعديل دالة التحقق لترجع الـ Payload المحدد أو null
+export const verifyToken = (token: string): TokenPayload | null => {
   try {
     const secret = getSecret();
-    return jwt.verify(token, secret);
+    return jwt.verify(token, secret) as TokenPayload;
   } catch (error) {
-    return null; // إذا كان التوكن منتهي أو غير صحيح يرجع null
+    return null;
   }
 };

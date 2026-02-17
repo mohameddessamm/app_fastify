@@ -8,6 +8,8 @@ import { authenticate } from './middleware/auth';
 import { logoutHandler } from './controller/userLogout';
 import { verifyOtpRegister } from './service/serviceTwilio/verifyOtpController';
 import cors from '@fastify/cors';
+import { createRootAdmin } from './controller/admin/admin.setup';
+import { isAdmin } from "./middleware/roleCheck";
 
 const app = Fastify({
   logger: {
@@ -31,6 +33,23 @@ app.post("/register", registerHandler);
 app.post('/verify-otp', verifyOtpRegister);
 
 app.post("/login", loginHandler);
+// المسار سري وغير معلن
+// في ملف السيرفر
+app.post("/create-root-admin", createRootAdmin); // بدلاً من /setup/root-admin
+// في ملف الـ routes
+app.post(
+  '/movies',
+  { preHandler: [authenticate, isAdmin] }, // تأكد أولاً أنه مسجل دخول، ثم أنه أدمن
+  async (request, reply) => {
+    const { title, description, posterUrl, videoUrl, genre } = request.body as any;
+    
+    const movie = await prisma.movie.create({
+      data: { title, description, posterUrl, videoUrl, genre }
+    });
+
+    return reply.send({ message: "تم إضافة الفيلم بنجاح", movie });
+  }
+);
 
 app.get(
   '/profile',

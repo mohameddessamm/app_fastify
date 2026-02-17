@@ -1,46 +1,55 @@
 generator client {
   provider = "prisma-client-js"
-   output   = "../generated/prisma"
+  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
- 
+  
+}
+
+// 1. تحديد الرتب (مستخدم أو أدمن)
+enum Role {
+  USER
+  ADMIN
 }
 
 model User {
-  id            Int           @id @default(autoincrement())
-  username      String        @unique
-  email         String        @unique
+  id            Int            @id @default(autoincrement())
+  username      String         @unique
+  email         String         @unique
   password      String
-  phone         String       @unique 
-  // حالة الحساب
-  isVerified    Boolean       @default(false) 
-  // بيانات الـ OTP
-  otpCode       String?      // كود التحقق المشفر أو العادي
-  otpExpiresAt  DateTime?     // وقت انتهاء الرمز
-  otpType       OtpType?      // نوع الـ OTP (تفعيل حساب أم تغيير باسوورد)
-  // العلاقات
-  posts         Post[]
+  phone         String         @unique
+  
+  // 2. إضافة الرتبة (تلقائياً الكل USER)
+  role          Role           @default(USER)
 
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  isVerified    Boolean        @default(false)
+  otpCode       String?
+  otpExpiresAt  DateTime?
+  otpType       OtpType?
+  
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
 
-// إضافة Enum لتنظيم أنواع الـ OTP
+// 3. جدول الأفلام (للإضافة والحذف والتعديل)
+model Movie {
+  id           Int      @id @default(autoincrement())
+  title        String
+  description  String?  @db.Text
+  posterUrl    String?
+  videoUrl     String?
+  genre        String[]
+  rating       Float    @default(0.0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
 enum OtpType {
   ACCOUNT_VERIFICATION
   PASSWORD_RESET
   TWO_FACTOR_AUTH
-}
-
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  Int
-  author    User     @relation(fields: [authorId], references: [id])
 }
 
 // Block token from logout 
@@ -48,5 +57,5 @@ model BlockedToken {
   id        String   @id @default(uuid())
   token     String   @unique
   createdAt DateTime @default(now())
-  expiresAt DateTime 
+  expiresAt DateTime
 }

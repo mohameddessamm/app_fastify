@@ -2,6 +2,7 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { prisma } from "../lib/prisma";
 import bcrypt from "bcrypt";
 import { generateToken } from "../service/jwt/auth";
+// ... (نفس الإستيرادات السابقة)
 
 export const loginHandler = async (
   request: FastifyRequest,
@@ -12,7 +13,6 @@ export const loginHandler = async (
     password: string;
   };
 
-  // 1. التأكد من إرسال البيانات
   if (!email || !password) {
     return reply
       .status(400)
@@ -20,7 +20,6 @@ export const loginHandler = async (
   }
 
   try {
-    // 2. البحث عن المستخدم في قاعدة البيانات
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
       return reply
@@ -28,7 +27,6 @@ export const loginHandler = async (
         .send({ message: "البريد الإلكتروني أو كلمة المرور غير صحيحة" });
     }
 
-    // 3. مقارنة كلمة المرور المشفرة
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return reply
@@ -36,22 +34,32 @@ export const loginHandler = async (
         .send({ message: "البريد الإلكتروني أو كلمة المرور غير صحيحة" });
     }
 
-    // 4. إنشاء التوكن (JWT)
-    const token = generateToken({ id: user.id, email: user.email });
+    // --- التعديل الأول: إضافة الـ role داخل التوكن ---
+    // هذا يسمح للـ Middleware بمعرفة رتبة المستخدم فوراً دون استعلام إضافي من قاعدة البيانات
+    const token = generateToken({ 
+      id: user.id, 
+      email: user.email, 
+      role: user.role // أضفنا الرتبة هنا
+    });
 
-    // 5. إرسال التوكن في الكوكي والرد بنجاح
     return reply
       .setCookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
         path: "/",
-        maxAge: 7 * 24 * 60 * 60, // أسبوع
+        maxAge: 7 * 24 * 60 * 60,
       })
       .status(200)
       .send({
         message: "تم تسجيل الدخول بنجاح",
-        user: { id: user.id,  username : user. username , email: user.email },
+        // --- التعديل الثاني: إعادة الـ role في الرد لكي يستخدمه الـ Frontend ---
+        user: { 
+          id: user.id, 
+          username: user.username, 
+          email: user.email, 
+          role: user.role // أضفنا الرتبة هنا أيضاً
+        },
       });
   } catch (error) {
     console.error(error);

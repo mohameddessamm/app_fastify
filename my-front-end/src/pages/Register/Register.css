@@ -8,7 +8,7 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
-  background-color: #000; /* خلفية احتياطية سوداء */
+  background-color: #dfd5d5; /* خلفية احتياطية سوداء */
 }
 
 /* 2. الحاوية الكبرى - ثابتة لملء الشاشة */
@@ -19,14 +19,13 @@ html, body {
   width: 100vw;
   overflow: hidden;
   
-  /* التعديل هنا */
-  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
-              url('../assets/ChatGPT\ Image\ 15\ فبراير\ 2026،\ 11_52_51\ ص.png'); 
-  
-  background-size: contain;    /* هيخلي الصورة تظهر كاملة بدون قص */
-  background-repeat: no-repeat; /* عشان الصورة متتكررش */
-  background-position: left center; /* هيخلي الشخصيات على الشمال والفورم يمين */
-  background-color: #000;      /* لون أسود يملأ الفراغ لو الصورة أصغر من الشاشة */
+  /* المسار الجديد بعد تغيير الاسم */
+  background: linear-gradient(rgba(109, 108, 108, 0.3), rgba(9, 7, 7, 0.8)), 
+              url('../../assets/photo.png'); 
+
+  background-size: cover; /* غيرها لـ cover عشان تملأ الشاشة بالكامل بشكل احترافي */
+  background-repeat: no-repeat;
+  background-position: center; 
   background-attachment: fixed;
 }
 /* 3. الناف بار العلوي - ارتفاع ثابت */
@@ -60,10 +59,10 @@ html, body {
 /* 4. التقسيم الرئيسي - السايد بار بجانب الفورم */
 .main-content {
   display: flex;
-  flex: 1; /* يأخذ باقي مساحة الشاشة تحت الناف بار */
-  height: calc(100vh - 70px); 
+  flex: 1;
+  height: calc(100vh - 70px);
+  padding-top: 20px; /* مساحة إضافية اختيارية */
 }
-
 /* 5. السايد بار - عرض ثابت */
 .side-navbar {
   width: 200px;
