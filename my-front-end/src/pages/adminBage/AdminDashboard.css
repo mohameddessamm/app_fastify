@@ -1,0 +1,32 @@
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 30px;
+}
+
+.movies-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #1a1a1a;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.movies-table th, .movies-table td {
+    padding: 15px;
+    text-align: right;
+    border-bottom: 1px solid #333;
+}
+
+.movies-table th { background: #333; color: #e50914; }
+
+.delete-btn {
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.delete-btn:hover { background: #cc0000; }

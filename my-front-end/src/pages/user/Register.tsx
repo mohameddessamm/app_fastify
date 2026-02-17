@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // أضفنا Link هنا
+import { useNavigate } from 'react-router-dom'; // أضفنا Link هنا
 import api from '../../api/axios'; 
 import './Register.css';
 import { AxiosError } from 'axios';

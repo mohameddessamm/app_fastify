@@ -4,6 +4,7 @@ import VerifyOtp from "./pages/user/VerifyOtp";
 import Profile from "./pages/Profile/Profile";
 import AdminSetup from "./pages/adminBage/adminlogec";
 import Login from "./pages/adminBage/LoginAdmin";
+import AdminDashboard from "./pages/adminBage/AdminDashboard";
 // استيراد الصفحات الجديدة (تأكد من إنشاء هذه الملفات)
 // import AdminDashboard from './pages/adminBage/AdminDashboard';
 // import AddMovie from './pages/adminBage/AddMovie';
@@ -26,7 +27,7 @@ function App() {
       <Route path="/admin-init-secret" element={<AdminSetup />} />
 
       {/* لوحة تحكم الأدمن - تعرض قائمة الأفلام مع خيار الحذف */}
-      {/* <Route path="/admin/dashboard" element={<AdminDashboard />} /> */}
+ <Route path="/admin/dashboard" element={<AdminDashboard />} />
 
       {/* صفحة إضافة فيلم جديد */}
       {/* <Route path="/admin/add-movie" element={<AddMovie />} /> */}
