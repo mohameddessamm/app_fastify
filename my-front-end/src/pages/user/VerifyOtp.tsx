@@ -48,7 +48,7 @@ const VerifyOtp: React.FC = () => {
 
     try {
       // 🚀 إرسال الطلب للباك-إيند (المسار بتاعك)
-      const response = await api.post('/verify-otp', { 
+      const response = await api.post('/auth/verify-otp', { 
         phone: phone, 
         otp: otpCode 
       });

@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { prisma } from "../lib/prisma";
+import { prisma } from "../../lib/prisma";
 import bcrypt from "bcrypt";
-import { generateToken } from "../service/jwt/auth";
+import { generateToken } from "../../service/jwt/auth";
 // ... (نفس الإستيرادات السابقة)
 
 export const loginHandler = async (

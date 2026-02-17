@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // استيراد الهوك للتوجيه
 import api from '../../api/axios';
 import './AdminSetup.css';
 
 const AdminSetup: React.FC = () => {
+    const navigate = useNavigate(); // تعريف دالة التنقل
+
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -18,7 +21,7 @@ const AdminSetup: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await api.post('/create-root-admin', {
+            const response = await api.post('auth/create-root-admin', {
                 username: formData.username,
                 email: formData.email,
                 password: formData.password,
@@ -29,8 +32,14 @@ const AdminSetup: React.FC = () => {
             });
 
             alert(response.data.message);
+
+            // 🚀 التوجيه لصفحة الـ login بعد إنشاء الأدمن بنجاح
+            navigate('/login');
+
         } catch (error: any) {
-            alert(error.response?.data?.message || "حدث خطأ أثناء إنشاء الأدمن");
+            console.error("Admin Creation Error:", error);
+            const errorMessage = error.response?.data?.message || "حدث خطأ أثناء إنشاء الأدمن";
+            alert(errorMessage);
         }
     };
 
@@ -44,26 +53,61 @@ const AdminSetup: React.FC = () => {
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label>المفتاح السري للنظام (Admin Key)</label>
-                        <input type="password" name="adminKey" onChange={handleChange} required placeholder="ادخل مفتاح الأمان..." />
+                        <input 
+                            type="password" 
+                            name="adminKey" 
+                            value={formData.adminKey}
+                            onChange={handleChange} 
+                            required 
+                            placeholder="ادخل مفتاح الأمان..." 
+                        />
                     </div>
-                    <div className="form-row">
-                        <div className="form-group">
+
+                    <div className="form-row" style={{ display: 'flex', gap: '10px' }}>
+                        <div className="form-group" style={{ flex: 1 }}>
                             <label>اسم المستخدم</label>
-                            <input type="text" name="username" onChange={handleChange} required />
+                            <input 
+                                type="text" 
+                                name="username" 
+                                value={formData.username}
+                                onChange={handleChange} 
+                                required 
+                            />
                         </div>
-                        <div className="form-group">
+                        <div className="form-group" style={{ flex: 1 }}>
                             <label>رقم الهاتف</label>
-                            <input type="text" name="phone" onChange={handleChange} required />
+                            <input 
+                                type="text" 
+                                name="phone" 
+                                value={formData.phone}
+                                onChange={handleChange} 
+                                required 
+                            />
                         </div>
                     </div>
+
                     <div className="form-group">
                         <label>البريد الإلكتروني</label>
-                        <input type="email" name="email" onChange={handleChange} required />
+                        <input 
+                            type="email" 
+                            name="email" 
+                            value={formData.email}
+                            onChange={handleChange} 
+                            required 
+                        />
                     </div>
+
                     <div className="form-group">
                         <label>كلمة المرور</label>
-                        <input type="password" name="password" onChange={handleChange} required />
+                        <input 
+                            type="password" 
+                            name="password" 
+                            value={formData.password}
+                            onChange={handleChange} 
+                            required 
+                        />
                     </div>
+
                     <button type="submit" className="setup-button">تفعيل صلاحيات الأدمن</button>
                 </form>
             </div>

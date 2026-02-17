@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { prisma } from "../lib/prisma"; // تأكد من المسار الصحيح
+import { prisma } from "../../lib/prisma"; // تأكد من المسار الصحيح
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import twilio from "twilio";

@@ -1,6 +1,6 @@
-import { prisma } from "../lib/prisma";
+import { prisma } from "../../lib/prisma";
 import { FastifyRequest, FastifyReply } from "fastify";
-import { verifyToken } from "./../service/jwt/auth";
+import { verifyToken } from "../../service/jwt/auth";
 
 // أضفنا async هنا ليعمل await بالداخل
 export const logoutHandler = async (
