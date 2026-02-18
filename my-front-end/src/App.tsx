@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Register from './pages/Register/Register';
-import VerifyOtp from './pages/Register/VerifyOtp';
+import Register from './pages/user/Register';
+import VerifyOtp from './pages/user/VerifyOtp';
 import Profile from './pages/Profile/Profile';
 import AdminSetup from './pages/adminBage/adminlogec';
 
