@@ -42,6 +42,7 @@ if (new Date() > user.otpExpiresAt!) {
     const token = generateToken({
       id: updatedUser.id,
       email: updatedUser.email,
+      role:updatedUser.role,
     });
 
     // send token in kookie

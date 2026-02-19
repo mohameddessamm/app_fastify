@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // 1. استيراد الهوك
-import api from '../../api/axios'; 
-import './Register.css';
-import  { AxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
+import api from '../../../api/axios'; 
+import '../userCss/Register.css';
+import { AxiosError } from 'axios';
 
 const Register = () => {
-  const navigate = useNavigate(); // 2. تعريف الهوك داخل جسم الـ Component (مهم جداً)
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     username: '',
@@ -14,23 +14,22 @@ const Register = () => {
     phone: ''
   });
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await api.post('/register', formData);
+      // إرسال البيانات للباك-إيند
+      const response = await api.post('auth/register', formData);
       console.log('تم التسجيل بنجاح:', response.data);
       
-      // 3. الانتقال لصفحة الـ OTP مع تمرير رقم الهاتف
-      // الـ state هنا هو اللي هيخلي صفحة الـ OTP تعرف الرقم
+      // الانتقال لصفحة الـ OTP مع تمرير الهاتف
       navigate('/verify-otp', { state: { phone: formData.phone } });
 
     } catch (error: unknown) {
       const err = error as AxiosError<any>;
-      console.error('فشل التسجيل:', err.response?.data || err.message);
       const errorMessage = err.response?.data?.message || 'حدث خطأ أثناء التسجيل';
       alert(errorMessage);
     }
@@ -38,11 +37,24 @@ const Register = () => {
 
   return (
     <div className="app-container">
+      {/* البار العلوي المنظم */}
       <nav className="top-navbar">
         <div className="logo">HORROR<span>FLIX</span></div>
+        
         <div className="search-wrapper">
           <input type="text" placeholder="Search for a killer..." className="search-input" />
           <button className="search-btn">🔍</button>
+        </div>
+
+        {/* الزر الجديد فوق على اليسار */}
+        <div className="nav-auth-actions">
+          <button 
+            type="button" 
+            className="top-nav-login-btn" 
+            onClick={() => navigate('/login')}
+          >
+            Login
+          </button>
         </div>
       </nav>
 

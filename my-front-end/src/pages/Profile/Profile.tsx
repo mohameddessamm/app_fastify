@@ -9,7 +9,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         // نداء المسار اللي إنت كتبته في الباك إيند
-        const response = await api.get('/profile');
+        const response = await api.get('auth/profile');
         setUser(response.data.user);
       } catch (error) {
         console.error("فشل في جلب البيانات", error);

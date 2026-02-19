@@ -21,7 +21,7 @@ html, body {
   
   /* المسار الجديد بعد تغيير الاسم */
   background: linear-gradient(rgba(109, 108, 108, 0.3), rgba(9, 7, 7, 0.8)), 
-              url('../../assets/photo.png'); 
+              url('../../../assets/photo.png'); 
 
   background-size: cover; /* غيرها لـ cover عشان تملأ الشاشة بالكامل بشكل احترافي */
   background-repeat: no-repeat;
@@ -136,3 +136,46 @@ html, body {
 }
 
 .register-button:hover { background: #ff0a16; transform: translateY(-2px); }
+/* تنسيق البار العلوي ليصبح مرناً */
+.top-navbar {
+    display: flex;
+    justify-content: space-between; /* يوزع العناصر (لوجو - بحث - زر) */
+    align-items: center;
+    padding: 10px 30px;
+    background-color: #000;
+    border-bottom: 1px solid #1a1a1a;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* حاوية الزر العلوي على اليسار */
+.nav-auth-actions {
+    display: flex;
+    align-items: center;
+}
+
+/* زر الـ Login الأنيق */
+.top-nav-login-btn {
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #e50914; /* حدود حمراء */
+    padding: 6px 18px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.top-nav-login-btn:hover {
+    background-color: #e50914; /* يتحول للون أحمر كامل عند الوقوف عليه */
+    color: white;
+    box-shadow: 0 0 10px rgba(229, 9, 20, 0.4);
+}
+
+/* تعديل مربع البحث ليبقى في المنتصف */
+.search-wrapper {
+    flex-grow: 0.5;
+    display: flex;
+    justify-content: center;
+}

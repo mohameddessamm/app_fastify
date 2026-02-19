@@ -1,16 +1,18 @@
-import React, { useState, } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'; // مهم لجلب التليفون
-import api from '../../api/axios'; // تأكد من مسار axios
-import './VerifyOtp.css';
+import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import api from '../../../api/axios'; 
+import '../userCss/VerifyOtp.css';
 
 const VerifyOtp: React.FC = () => {
+  // 1. التعريفات داخل الـ Component
   const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
+  const [loading, setLoading] = useState(false); // مكانها الصحيح هنا
   const location = useLocation();
   const navigate = useNavigate();
   
-  // جلب رقم الهاتف اللي بعتناه من صفحة التسجيل
   const phone = location.state?.phone;
 
+  // 2. منطق إدخال الأرقام
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const value = e.target.value;
     if (isNaN(Number(value))) return;
@@ -19,7 +21,6 @@ const VerifyOtp: React.FC = () => {
     newOtp[index] = value.substring(value.length - 1);
     setOtp(newOtp);
 
-    // تحريك التركيز للمربع التالي
     if (value !== '' && e.target.nextElementSibling) {
       (e.target.nextElementSibling as HTMLInputElement).focus();
     }
@@ -32,9 +33,10 @@ const VerifyOtp: React.FC = () => {
     }
   };
 
+  // 3. إرسال الكود
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const otpCode = otp.join(''); // تجميع الـ 6 أرقام
+    const otpCode = otp.join('');
 
     if (otpCode.length < 6) {
       alert("من فضلك أدخل الكود كاملاً");
@@ -42,26 +44,26 @@ const VerifyOtp: React.FC = () => {
     }
 
     if (!phone) {
-      alert("حدث خطأ: رقم الهاتف مفقود، يرجى إعادة التسجيل");
+      alert("رقم الهاتف مفقود، يرجى العودة لصفحة التسجيل");
       return;
     }
 
+    setLoading(true);
     try {
-      // 🚀 إرسال الطلب للباك-إيند (المسار بتاعك)
-      const response = await api.post('/verify-otp', { 
+      const response = await api.post('/auth/verify-otp', { 
         phone: phone, 
         otp: otpCode 
       });
 
       if (response.status === 200) {
-        alert("تم تفعيل الحساب بنجاح! جاري توجيهك...");
-        // توجيه المستخدم للصفحة الرئيسية أو لوحة التحكم
-       navigate('/profile');
+        alert("تم تفعيل الحساب بنجاح!");
+        navigate('/profile'); 
       }
     } catch (error: any) {
-      // معالجة الأخطاء بناءً على الرسايل اللي إنت كاتبها في الباك-إيند
-      const message = error.response?.data?.message || "كود غير صحيح أو منتهي الصلاحية";
+      const message = error.response?.data?.message || "الكود غير صحيح";
       alert(message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -70,7 +72,7 @@ const VerifyOtp: React.FC = () => {
       <div className="otp-card">
         <div className="lock-icon">🔒</div>
         <h2>تأكيد الهوية</h2>
-        <p>أدخل الكود المرسل إلى الرقم: <strong>{phone}</strong></p>
+        <p>أدخل الكود المرسل إلى الرقم: <strong>{phone || "غير معروف"}</strong></p>
         
         <form onSubmit={handleSubmit}>
           <div className="otp-inputs">
@@ -80,13 +82,16 @@ const VerifyOtp: React.FC = () => {
                 type="text"
                 maxLength={1}
                 value={data}
+                disabled={loading} // تعطيل الإدخال أثناء التحميل
                 onChange={(e) => handleChange(e, index)}
                 onKeyDown={(e) => handleKeyDown(e, index)}
                 onFocus={(e) => (e.target as HTMLInputElement).select()}
               />
             ))}
           </div>
-          <button type="submit" className="verify-button">تأكيد الرمز</button>
+          <button type="submit" className="verify-button" disabled={loading}>
+            {loading ? "جاري التحقق..." : "تأكيد الرمز"}
+          </button>
         </form>
         
         <div className="resend-text">
