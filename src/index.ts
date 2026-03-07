@@ -3,7 +3,7 @@ import Fastify from 'fastify';
 import fastifyCookie from '@fastify/cookie';
 import cors from '@fastify/cors';
 import { prisma } from './lib/prisma';
-
+import { movieRoutes } from "./routes/movieRoutes";
 // استيراد مجموعات المسارات
 import { authRoutes } from './routes/authRoutes';
 import { adminRoutes } from './routes/adminRoutes';
@@ -19,9 +19,11 @@ await app.register(cors, {
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 });
 app.register(fastifyCookie);
-
+// في ملف server.ts أو main.ts
+app.register(movieRoutes, { prefix: 'api/movies' });
 // 2. تسجيل مجموعات المسارات (هنا التنظيم الحقيقي)
-app.register(authRoutes, { prefix: 'api/auth' });   // ستصبح الروابط /auth/login
+app.register(authRoutes, { prefix: 'api/auth' }); 
+  // ستصبح الروابط /auth/login
 app.register(adminRoutes, { prefix: 'api/admin' }); // ستصبح الروابط /admin/movies
 
 // مسار الفحص

@@ -5,12 +5,13 @@ import Profile from './pages/Profile/Profile';
 import Login from './pages/user/userTsx/login';
 import CreateRootAdmin from './pages/adminBage/admintsx/adminlogec';
 import LoginAdmin from './pages/adminBage/admintsx/adminlogin';
+import MovieList from "./pages/movies/MovieList.tsx"
 function App() {
   return (
     <Routes>
       {/* 1. التوجيه التلقائي: أول ما الموقع يفتح يروح للتسجيل */}
       <Route path="/" element={<Navigate to="/register" />} />
-      
+    <Route path="/movies" element={< MovieList/>} />
       {/* 2. مسارات التسجيل والتحقق */}
       <Route path="/register" element={<Register />} />
       <Route path="/verify-otp" element={<VerifyOtp />} />

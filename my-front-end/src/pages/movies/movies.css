@@ -1,0 +1,123 @@
+/* الإعدادات العامة للحاوية */
+.movie-container {
+  padding: 2rem;
+  background-color: #0f172a; /* لون خلفية غامق احترافي */
+  min-height: 100vh;
+  color: #f8fafc;
+  direction: rtl; /* لدعم اللغة العربية إذا لزم الأمر */
+}
+
+.title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: #38bdf8; /* لون أزرق سماوي للعناوين */
+}
+
+/* نظام الشبكة (Grid) */
+.movie-grid {
+  display: grid;
+  /* تقسيم الكروت تلقائياً بناءً على حجم الشاشة */
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+/* تصميم كارت الفيلم */
+.movie-card {
+  background-color: #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  border: 1px solid #334155;
+}
+
+.movie-card:hover {
+  transform: translateY(-10px); /* تأثير الارتفاع عند التحويم */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  border-color: #38bdf8;
+}
+
+/* تصميم الصورة */
+.movie-card img {
+  width: 100%;
+  aspect-ratio: 2 / 3; /* الحفاظ على أبعاد البوستر */
+  object-fit: cover;
+  display: block;
+}
+
+/* معلومات الفيلم */
+.movie-info {
+  padding: 1rem;
+  background: linear-gradient(to top, #1e293b 80%, transparent);
+}
+
+.movie-info h3 {
+  font-size: 0.95rem;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* وضع نقاط إذا كان العنوان طويلاً */
+  color: #f1f5f9;
+}
+
+.movie-info p {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 0.5rem;
+}
+
+/* أزرار التنقل (Pagination) */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  padding-bottom: 2rem;
+}
+
+.pagination button {
+  background-color: #38bdf8;
+  color: #0f172a;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #0ea5e9;
+  transform: scale(1.05);
+}
+
+.pagination button:disabled {
+  background-color: #334155;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+.page-number {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #cbd5e1;
+}
+
+/* رسالة التحميل */
+.loading {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: 5rem;
+  color: #38bdf8;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

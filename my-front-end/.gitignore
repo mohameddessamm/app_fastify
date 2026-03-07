@@ -11,7 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
-
+VITE_TMDB_API_KEY=e5525353956b5473fc8def1857bae2ae
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

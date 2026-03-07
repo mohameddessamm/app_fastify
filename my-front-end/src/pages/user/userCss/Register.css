@@ -152,21 +152,20 @@ html, body {
 /* حاوية الزر العلوي على اليسار */
 .nav-auth-actions {
     display: flex;
-    align-items: center;
+    gap: 15px; /* مسافة بين الزرين */
 }
 
 /* زر الـ Login الأنيق */
-.top-nav-login-btn {
+.top-nav-btn {
     background-color: transparent;
     color: #fff;
-    border: 1px solid #e50914; /* حدود حمراء */
-    padding: 6px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 8px 20px;
     border-radius: 4px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
 }
-
 .top-nav-login-btn:hover {
     background-color: #e50914; /* يتحول للون أحمر كامل عند الوقوف عليه */
     color: white;
@@ -178,4 +177,30 @@ html, body {
     flex-grow: 0.5;
     display: flex;
     justify-content: center;
+}
+.login-style {
+    border-color: #e50914;
+    color: #fff;
+}.top-nav-btn:hover, .active-btn {
+    background-color: #e50914;
+    border-color: #e50914;
+    box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+}
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px); /* تدخل من اليمين قليلاً */
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}.register-container {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 10%;
 }

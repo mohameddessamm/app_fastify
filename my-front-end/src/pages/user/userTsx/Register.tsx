@@ -6,6 +6,8 @@ import { AxiosError } from 'axios';
 
 const Register = () => {
   const navigate = useNavigate();
+  // حالة التحكم في ظهور الفورم
+  const [showRegisterForm, setShowRegisterForm] = useState(false);
 
   const [formData, setFormData] = useState({
     username: '',
@@ -21,13 +23,8 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // إرسال البيانات للباك-إيند
       const response = await api.post('auth/register', formData);
-      console.log('تم التسجيل بنجاح:', response.data);
-      
-      // الانتقال لصفحة الـ OTP مع تمرير الهاتف
       navigate('/verify-otp', { state: { phone: formData.phone } });
-
     } catch (error: unknown) {
       const err = error as AxiosError<any>;
       const errorMessage = err.response?.data?.message || 'حدث خطأ أثناء التسجيل';
@@ -37,7 +34,6 @@ const Register = () => {
 
   return (
     <div className="app-container">
-      {/* البار العلوي المنظم */}
       <nav className="top-navbar">
         <div className="logo">HORROR<span>FLIX</span></div>
         
@@ -46,11 +42,17 @@ const Register = () => {
           <button className="search-btn">🔍</button>
         </div>
 
-        {/* الزر الجديد فوق على اليسار */}
         <div className="nav-auth-actions">
+          {/* زر Register الجديد الذي يظهر الفورم */}
           <button 
-            type="button" 
-            className="top-nav-login-btn" 
+            className={`top-nav-btn ${showRegisterForm ? 'active-btn' : ''}`}
+            onClick={() => setShowRegisterForm(!showRegisterForm)}
+          >
+            Register
+          </button>
+          
+          <button 
+            className="top-nav-btn login-style" 
             onClick={() => navigate('/login')}
           >
             Login
@@ -72,34 +74,33 @@ const Register = () => {
           </div>
         </aside>
 
-        <div className="register-container">
-          <div className="register-card">
-            <h2>إنشاء حساب جديد</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label>اسم المستخدم</label>
-                <input name="username" type="text" value={formData.username} onChange={handleChange} required />
-              </div>
-
-              <div className="form-group">
-                <label>البريد الإلكتروني</label>
-                <input name="email" type="email" value={formData.email} onChange={handleChange} required />
-              </div>
-
-              <div className="form-group">
-                <label>رقم الهاتف</label>
-                <input name="phone" type="tel" value={formData.phone} onChange={handleChange} required />
-              </div>
-
-              <div className="form-group">
-                <label>كلمة المرور</label>
-                <input name="password" type="password" value={formData.password} onChange={handleChange} required />
-              </div>
-
-              <button type="submit" className="register-button">تسجيل</button>
-            </form>
+        {/* تظهر الفورم فقط إذا كانت القيمة true */}
+        {showRegisterForm && (
+          <div className="register-container fade-in">
+            <div className="register-card">
+              <h2>إنشاء حساب جديد</h2>
+              <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <label>اسم المستخدم</label>
+                  <input name="username" type="text" value={formData.username} onChange={handleChange} required />
+                </div>
+                <div className="form-group">
+                  <label>البريد الإلكتروني</label>
+                  <input name="email" type="email" value={formData.email} onChange={handleChange} required />
+                </div>
+                <div className="form-group">
+                  <label>رقم الهاتف</label>
+                  <input name="phone" type="tel" value={formData.phone} onChange={handleChange} required />
+                </div>
+                <div className="form-group">
+                  <label>كلمة المرور</label>
+                  <input name="password" type="password" value={formData.password} onChange={handleChange} required />
+                </div>
+                <button type="submit" className="register-button">إرسال</button>
+              </form>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
