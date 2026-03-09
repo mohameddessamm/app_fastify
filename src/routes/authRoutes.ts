@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
-import { registerHandler } from "../controller/userRegister";
-import { loginHandler } from '../controller/userLogin';
-import { logoutHandler } from '../controller/userLogout';
+import { registerHandler } from "../controller/user/userRegister";
+import { loginHandler } from '../controller/user/userLogin';
+import { logoutHandler } from '../controller/user/userLogout';
 import { verifyOtpRegister } from '../service/serviceTwilio/verifyOtpController';
 import { authenticate } from '../middleware/auth';
 
