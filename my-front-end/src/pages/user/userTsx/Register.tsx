@@ -43,7 +43,7 @@ const Register = () => {
             className={`top-nav-btn ${showRegisterForm ? "active-btn" : ""}`}
             onClick={() => setShowRegisterForm(!showRegisterForm)}
           >
-            Registerrrrrrrrrrrrrrrrr
+            Registe
           </button>
           <button
             className="top-nav-btn login-style"
