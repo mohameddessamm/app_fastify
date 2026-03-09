@@ -19,7 +19,7 @@ function App() {
       
       {/* 3. مسار الملف الشخصي (بعد التفعيل) */}
       <Route path="/profile" element={<Profile />} />
-
+      <Route path="/movies" element={< MovieList/>} />
       {/* 4. مسار إنشاء الأدمن (المسار السري) */}
      <Route path="/create-admin" element={<CreateRootAdmin />} />
       <Route path="/admin-login" element={<LoginAdmin />} />

@@ -1,25 +1,27 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // 1. استيراد useNavigate
 import api from '../../api/axios';
 
 const Profile = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // 2. تعريف التوجيه
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        // نداء المسار اللي إنت كتبته في الباك إيند
         const response = await api.get('auth/profile');
         setUser(response.data.user);
       } catch (error) {
         console.error("فشل في جلب البيانات", error);
-        window.location.href = '/register'; // لو مش مسجل يرجعه للتسجيل
+        // 3. التوجيه لصفحة تسجيل الدخول بدلاً من التسجيل
+        navigate('/login'); 
       } finally {
         setLoading(false);
       }
     };
     fetchProfile();
-  }, []);
+  }, [navigate]);
 
   if (loading) return <div style={{color: 'white', textAlign: 'center'}}>Loading...</div>;
 

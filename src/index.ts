@@ -21,13 +21,13 @@ await app.register(cors, {
 app.register(fastifyCookie);
 // في ملف server.ts أو main.ts
 app.register(movieRoutes, { prefix: 'api/movies' });
-// 2. تسجيل مجموعات المسارات (هنا التنظيم الحقيقي)
 app.register(authRoutes, { prefix: 'api/auth' }); 
+// 2. تسجيل مجموعات المسارات (هنا التنظيم الحقيقي)
+
   // ستصبح الروابط /auth/login
 app.register(adminRoutes, { prefix: 'api/admin' }); // ستصبح الروابط /admin/movies
 
 // مسار الفحص
-app.get("/ping", async () => ({ message: "pong" }));
 
 const start = async () => {
     try {

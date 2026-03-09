@@ -1,19 +1,19 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import api from '../../../api/axios'; 
-import '../userCss/Register.css';
-import { AxiosError } from 'axios';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../../../api/axios";
+import "../userCss/Register.css";
+import { AxiosError } from "axios";
+import MovieList from "../../movies/MovieList";
 
 const Register = () => {
   const navigate = useNavigate();
-  // حالة التحكم في ظهور الفورم
   const [showRegisterForm, setShowRegisterForm] = useState(false);
 
   const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    phone: ''
+    username: "",
+    email: "",
+    password: "",
+    phone: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,37 +23,31 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await api.post('auth/register', formData);
-      navigate('/verify-otp', { state: { phone: formData.phone } });
+      // إرسال البيانات كاملة (الاسم، الايميل، الباسورد، الهاتف)
+      await api.post("auth/register", formData);
+      navigate("/verify-otp", { state: { phone: formData.phone } });
     } catch (error: unknown) {
       const err = error as AxiosError<any>;
-      const errorMessage = err.response?.data?.message || 'حدث خطأ أثناء التسجيل';
-      alert(errorMessage);
+      alert(err.response?.data?.message || "حدث خطأ أثناء التسجيل");
     }
   };
 
   return (
     <div className="app-container">
       <nav className="top-navbar">
-        <div className="logo">HORROR<span>FLIX</span></div>
-        
-        <div className="search-wrapper">
-          <input type="text" placeholder="Search for a killer..." className="search-input" />
-          <button className="search-btn">🔍</button>
+        <div className="logo">
+          HORROR<span>FLIX</span>
         </div>
-
         <div className="nav-auth-actions">
-          {/* زر Register الجديد الذي يظهر الفورم */}
-          <button 
-            className={`top-nav-btn ${showRegisterForm ? 'active-btn' : ''}`}
+          <button
+            className={`top-nav-btn ${showRegisterForm ? "active-btn" : ""}`}
             onClick={() => setShowRegisterForm(!showRegisterForm)}
           >
             Register
           </button>
-          
-          <button 
-            className="top-nav-btn login-style" 
-            onClick={() => navigate('/login')}
+          <button
+            className="top-nav-btn login-style"
+            onClick={() => navigate("/login")}
           >
             Login
           </button>
@@ -61,42 +55,73 @@ const Register = () => {
       </nav>
 
       <div className="main-content">
-        <aside className="side-navbar">
-          <div className="side-section">
-            <h3>Categories</h3>
-            <ul>
-              <li className="active">All Movies</li>
-              <li>Serial Killers</li>
-              <li>Psychological</li>
-              <li>Supernatural</li>
-              <li>Classics</li>
-            </ul>
-          </div>
-        </aside>
+        <div className={`movies-background ${showRegisterForm ? "blur" : ""}`}>
+          <MovieList />
+        </div>
 
-        {/* تظهر الفورم فقط إذا كانت القيمة true */}
         {showRegisterForm && (
-          <div className="register-container fade-in">
-            <div className="register-card">
+          <div className="register-overlay" dir="rtl">
+            <div className="register-card fade-in">
+              <button
+                className="close-btn"
+                onClick={() => setShowRegisterForm(false)}
+              >
+                ✖
+              </button>
               <h2>إنشاء حساب جديد</h2>
+
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
                   <label>اسم المستخدم</label>
-                  <input name="username" type="text" value={formData.username} onChange={handleChange} required />
+                  <input
+                    name="username"
+                    type="text"
+                    value={formData.username}
+                    onChange={handleChange}
+                    placeholder="مثال: Ahmed123"
+                    required
+                  />
                 </div>
+
                 <div className="form-group">
                   <label>البريد الإلكتروني</label>
-                  <input name="email" type="email" value={formData.email} onChange={handleChange} required />
+                  <input
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="example@mail.com"
+                    required
+                  />
                 </div>
+
                 <div className="form-group">
                   <label>رقم الهاتف</label>
-                  <input name="phone" type="tel" value={formData.phone} onChange={handleChange} required />
+                  <input
+                    name="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="01xxxxxxxxx"
+                    required
+                  />
                 </div>
+
                 <div className="form-group">
                   <label>كلمة المرور</label>
-                  <input name="password" type="password" value={formData.password} onChange={handleChange} required />
+                  <input
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="********"
+                    required
+                  />
                 </div>
-                <button type="submit" className="register-button">إرسال</button>
+
+                <button type="submit" className="register-button">
+                  إنشاء الحساب
+                </button>
               </form>
             </div>
           </div>
