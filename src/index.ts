@@ -38,6 +38,7 @@ const start = async () => {
   try {
     await prisma.$connect();
     await app.listen({ port: 4000, host: "0.0.0.0" });
+    initCleanupTask();
     console.log("🚀 Server running on http://localhost:4000");
   } catch (err) {
     app.log.error(err);
