@@ -1,3 +1,29 @@
+/* تصفير شامل لكل العناصر */
 * {
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* لضمان أن الـ padding لا يزيد من حجم العنصر */
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background-color: #000; /* لضمان عدم ظهور أي بياض عند السكرول */
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* يمنع ظهور سكرول عرضي يفسد التصميم */
+}
+
+/* تصفير الروابط والقوائم إذا كنت تستخدمها */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+}
+
+button, input {
+    font-family: inherit; /* لضمان استمرار الخط الذي اخترته */
 }

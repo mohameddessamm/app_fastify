@@ -7,6 +7,7 @@ import { movieRoutes } from "./routes/movieRoutes";
 // استيراد مجموعات المسارات
 import { authRoutes } from './routes/authRoutes';
 import { adminRoutes } from './routes/adminRoutes';
+import { initCleanupTask } from './service/CleanUser/cleanupService';
 
 const app = Fastify({
     logger: { transport: { target: 'pino-pretty' } }
@@ -34,6 +35,7 @@ const start = async () => {
         await prisma.$connect();
         await app.listen({ port: 4000, host: '0.0.0.0' });
         console.log('🚀 Server running on http://localhost:4000');
+        initCleanupTask();
     } catch (err) {
         app.log.error(err);
         process.exit(1);

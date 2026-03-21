@@ -4,7 +4,7 @@
 }
 /* الإعدادات العامة للشاشة */
 .app-container {
-  background-color: #000;
+  background-color: #ea2d2d;
   min-height: 100vh;
   color: white;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -17,7 +17,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 4%;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
+  background: linear-gradient(to bottom, rgba(96, 92, 92, 0.9) 0%, transparent 100%);
   position: fixed;
   top: 0;
   width: 100%;

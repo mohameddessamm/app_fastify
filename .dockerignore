@@ -26,3 +26,9 @@ docker-compose.yml
 .vscode/
 .idea/
 Thumbs.db
+node_modules
+dist
+my-front-end/node_modules
+my-front-end/dist
+.git
+.env
