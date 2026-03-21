@@ -5,8 +5,8 @@
 .movie-container {
   padding: 40px;
   min-height: 100vh;
-  background: #020617;
-  color: #e2e8f0;
+  background: #edede9;
+  color: #19191b;
   font-family: sans-serif;
 }
 
@@ -18,7 +18,7 @@
   text-align: center;
   font-size: 2rem;
   margin-bottom: 30px;
-  color: #38bdf8;
+  color: #f87238;
 }
 
 /* ===================== */
@@ -37,14 +37,14 @@
   padding: 8px 14px;
   border: none;
   border-radius: 20px;
-  background: #1e293b;
-  color: #cbd5f5;
+  background: #8ade75;
+  color: #e6e6ed;
   cursor: pointer;
   transition: 0.2s;
 }
 
 .genre-bar button:hover {
-  background: #334155;
+  background: #131414;
 }
 
 .genre-bar .active {
@@ -67,7 +67,7 @@
 /* ===================== */
 
 .movie-card {
-  background: #0f172a;
+  background: #edeaea;
   border-radius: 12px;
   overflow: hidden;
   transition: transform 0.3s;
@@ -114,8 +114,8 @@
   display: inline-block;
   margin-top: 6px;
   font-size: 0.75rem;
-  background: #facc15;
-  color: black;
+  background: #39d468;
+  color: rgb(25, 26, 26);
   padding: 3px 7px;
   border-radius: 6px;
 }
@@ -135,8 +135,8 @@
   padding: 8px 15px;
   border-radius: 6px;
   border: none;
-  background: #38bdf8;
-  color: #020617;
+  background: #e4ecef;
+  color: #243a87;
   font-weight: bold;
   cursor: pointer;
 }

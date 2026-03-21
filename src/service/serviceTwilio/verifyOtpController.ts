@@ -2,7 +2,6 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { generateToken } from "../jwt/auth";
 import { prisma } from "../../lib/prisma";
 
-
 export const verifyOtpRegister = async (
   request: FastifyRequest,
   reply: FastifyReply,
@@ -19,14 +18,14 @@ export const verifyOtpRegister = async (
       where: { phone },
     });
 
-   if (!user || user.otpCode !== otp) {
-  return reply.status(400).send({ message: "الكود غير صحيح" });
-}
+    if (!user || user.otpCode !== otp) {
+      return reply.status(400).send({ message: "الكود غير صحيح" });
+    }
     // verify otp
-  
-if (new Date() > user.otpExpiresAt!) {
-  return reply.status(400).send({ message: "انتهت صلاحية الكود" });
-}
+
+    if (new Date() > user.otpExpiresAt!) {
+      return reply.status(400).send({ message: "انتهت صلاحية الكود" });
+    }
     // (Atomic Update)
 
     const updatedUser = await prisma.user.update({
@@ -42,7 +41,7 @@ if (new Date() > user.otpExpiresAt!) {
     const token = generateToken({
       id: updatedUser.id,
       email: updatedUser.email,
-      role:updatedUser.role,
+      role: updatedUser.role,
     });
 
     // send token in kookie

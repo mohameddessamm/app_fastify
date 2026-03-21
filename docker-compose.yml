@@ -1,5 +1,5 @@
 services:
-  # خدمة قاعدة البيانات
+  # 1. قاعدة البيانات (PostgreSQL)
   postgres:
     image: postgres:16-alpine
     container_name: postgres_container
@@ -8,40 +8,39 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin123
       POSTGRES_DB: my_database
-      # يُفضل إضافة هذا السطر لضمان عدم حدوث مشاكل اتصال في البداية
-      POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
-      - postgres_data:/var/lib/postgresql
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
-      - app_netfastify
+      - app_net
 
-  # خدمة مشروع النود
-  nodefasstify:
+  # 2. التطبيق (الباك إند والفرونت إند معاً)
+  app:
     build:
       context: .
-      target: production
-    image: nodeapp_dev_image
+      target: development # نستخدم مرحلة التطوير هنا
     container_name: node_app_dev
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - DATABASE_URL=postgres://admin:admin123@postgres:5432/my_database
-      - JWT_SECRET=1234456677
+      - JWT_SECRET=your_super_secret_key
     ports:
-      - "4000:4000"
+      - "4000:4000" # منفذ السيرفر
+      - "5173:5173" # منفذ الفرونت إند (Vite) للتطوير
+      - "5555:5555" # منفذ Prisma Studio
+    volumes:
+      - .:/app
+      - /app/node_modules # حماية لمكتبات الحاوية
+      - /app/my-front-end/node_modules # حماية لمكتبات الفرونت إند
     depends_on:
       - postgres
-    # volumes:
-    #   - .:/app
-    #   - /app/node_modules
     networks:
-      - app_netfastify
-
+      - app_net
 
 volumes:
   postgres_data:
 
 networks:
-  app_netfastify:
+  app_net:
     driver: bridge
